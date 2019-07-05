@@ -37,6 +37,7 @@ public class Main extends Application {
         GridPane.setConstraints(pwdInput, 1, 1);
 
         Button loginButton = new Button("Login");
+        loginButton.setOnAction(e -> isInt(nameInput));
         GridPane.setConstraints(loginButton, 1, 2);
 
         grid.getChildren().addAll(nameLabel, nameInput, pwdLabel, pwdInput, loginButton);
@@ -45,6 +46,16 @@ public class Main extends Application {
         window.setScene(scene);
 
         window.show();
+    }
+
+    private void isInt(TextField input) {
+        try {
+            int user = Integer.parseInt(input.getText());
+            System.out.println("User is: " + user);
+        } catch (NumberFormatException e) {
+            System.out.println("Error.");
+            input.setStyle("-fx-border-color: red;");
+        }
     }
 
     public static void main(String[] args) {
