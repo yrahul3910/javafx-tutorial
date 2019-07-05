@@ -1,44 +1,59 @@
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     Stage window;
-    ListView<String> listView;
+    TreeView<String> treeView;
 
     @Override
     public void start(Stage stage) throws Exception {
         window = stage;
         window.setTitle("Title");
 
-        listView = new ListView<>();
-        listView.getItems().addAll("RED", "1989", "reputation", "Lover", "Fearless", "Speak Now", "Taylor Swift");
-        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        TreeItem<String> root, left, right;
+        root = new TreeItem<>();
+        root.setExpanded(true);
 
-        Button button = new Button("Submit");
-        button.setOnAction(e -> printItems());
+        left = makeBranch("Left", root);
+        makeBranch("leaf 1", left);
+        makeBranch("leaf 2", left);
+
+        right = makeBranch("Right", root);
+        makeBranch("leaf 3", right);
+
+        treeView = new TreeView<>(root);
+        treeView.setShowRoot(false);  // don't show root explicitly
+        treeView.getSelectionModel().selectedItemProperty().addListener(
+                (v, oldValue, newValue) -> {
+                    if (newValue != null)
+                        System.out.println(newValue.getValue());
+                }
+        );
+
+        Button button = new Button("Dummy");
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(listView, button);
+        layout.getChildren().addAll(treeView, button);
 
         Scene scene = new Scene(layout, 300, 250);
         window.setScene(scene);
         window.show();
     }
 
-    private void printItems() {
-        ObservableList<String> selected = listView.getSelectionModel().getSelectedItems();
+    private TreeItem<String> makeBranch(String s, TreeItem<String> parent) {
+        TreeItem<String> item = new TreeItem<>(s);
+        item.setExpanded(true);
+        parent.getChildren().add(item);
 
-        for (String s : selected)
-            System.out.println(s);
+        return item;
     }
 
     public static void main(String[] args) {
