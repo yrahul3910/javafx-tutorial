@@ -2,10 +2,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.CheckBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -17,44 +15,26 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Title");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        CheckBox box1 = new CheckBox("Turkey");
+        CheckBox box2 = new CheckBox("Ham");
+        box2.setSelected(true);
 
-        Label nameLabel = new Label("Username:");
-        GridPane.setConstraints(nameLabel, 0, 0);
+        Button button = new Button("Order now!");
+        button.setOnAction(e -> handleOptions(box1, box2));
 
-        TextField nameInput = new TextField();
-        nameInput.setPromptText("Enter your username");
-        GridPane.setConstraints(nameInput, 1, 0);
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20));
+        layout.getChildren().addAll(box1, box2, button);
 
-        Label pwdLabel = new Label("Password:");
-        GridPane.setConstraints(pwdLabel, 0, 1);
-
-        PasswordField pwdInput = new PasswordField();
-        pwdInput.setPromptText("Enter your password");
-        GridPane.setConstraints(pwdInput, 1, 1);
-
-        Button loginButton = new Button("Login");
-        loginButton.setOnAction(e -> isInt(nameInput));
-        GridPane.setConstraints(loginButton, 1, 2);
-
-        grid.getChildren().addAll(nameLabel, nameInput, pwdLabel, pwdInput, loginButton);
-
-        Scene scene = new Scene(grid, 300, 250);
+        Scene scene = new Scene(layout, 300, 250);
         window.setScene(scene);
-
         window.show();
     }
 
-    private void isInt(TextField input) {
-        try {
-            int user = Integer.parseInt(input.getText());
-            System.out.println("User is: " + user);
-        } catch (NumberFormatException e) {
-            System.out.println("Error.");
-            input.setStyle("-fx-border-color: red;");
+    private void handleOptions(CheckBox... boxes) {
+        for (CheckBox box : boxes) {
+            if (box.isSelected())
+                System.out.println(box.getText());
         }
     }
 
