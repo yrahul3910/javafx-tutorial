@@ -1,9 +1,11 @@
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -15,25 +17,33 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Title");
 
-        HBox topMenu = new HBox();
-        Button buttonA = new Button("File");
-        Button buttonB = new Button("Edit");
-        Button buttonC = new Button("View");
-        topMenu.getChildren().addAll(buttonA, buttonB, buttonC);
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10));
+        grid.setVgap(8);
+        grid.setHgap(10);
 
-        VBox leftMenu = new VBox();
-        Button buttonD = new Button("File");
-        Button buttonE = new Button("Edit");
-        Button buttonF = new Button("View");
-        leftMenu.getChildren().addAll(buttonD, buttonE, buttonF);
+        Label nameLabel = new Label("Username:");
+        GridPane.setConstraints(nameLabel, 0, 0);
 
-        BorderPane layout = new BorderPane();
-        layout.setTop(topMenu);
-        layout.setLeft(leftMenu);
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your username");
+        GridPane.setConstraints(nameInput, 1, 0);
 
-        Scene scene = new Scene(layout, 300, 250);
+        Label pwdLabel = new Label("Password:");
+        GridPane.setConstraints(pwdLabel, 0, 1);
 
+        PasswordField pwdInput = new PasswordField();
+        pwdInput.setPromptText("Enter your password");
+        GridPane.setConstraints(pwdInput, 1, 1);
+
+        Button loginButton = new Button("Login");
+        GridPane.setConstraints(loginButton, 1, 2);
+
+        grid.getChildren().addAll(nameLabel, nameInput, pwdLabel, pwdInput, loginButton);
+
+        Scene scene = new Scene(grid, 300, 250);
         window.setScene(scene);
+
         window.show();
     }
 
