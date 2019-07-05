@@ -16,11 +16,15 @@ public class Main extends Application {
         window.setTitle("Title");
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll("Apples", "Oranges", "Pears", "Bananas");
-        choiceBox.setValue("Apples");
+        choiceBox.getItems().addAll("red", "blue", "green");
+        choiceBox.setValue("red");
 
-        Button button = new Button("Order now!");
-        button.setOnAction(e -> getChoice(choiceBox));
+        // You could use choiceBox.setOnAction(...), but this lets you get the
+        // old value as well.
+        choiceBox.getSelectionModel().selectedItemProperty().addListener(
+                (v, oldValue, newValue) -> System.out.println(newValue));
+
+        Button button = new Button("Useless button");
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
@@ -29,10 +33,6 @@ public class Main extends Application {
         Scene scene = new Scene(layout, 300, 250);
         window.setScene(scene);
         window.show();
-    }
-
-    private void getChoice(ChoiceBox<String> choiceBox) {
-        System.out.println(choiceBox.getValue());
     }
 
     public static void main(String[] args) {
