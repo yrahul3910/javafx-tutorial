@@ -2,7 +2,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,27 +15,24 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Title");
 
-        CheckBox box1 = new CheckBox("Turkey");
-        CheckBox box2 = new CheckBox("Ham");
-        box2.setSelected(true);
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll("Apples", "Oranges", "Pears", "Bananas");
+        choiceBox.setValue("Apples");
 
         Button button = new Button("Order now!");
-        button.setOnAction(e -> handleOptions(box1, box2));
+        button.setOnAction(e -> getChoice(choiceBox));
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(box1, box2, button);
+        layout.getChildren().addAll(choiceBox, button);
 
         Scene scene = new Scene(layout, 300, 250);
         window.setScene(scene);
         window.show();
     }
 
-    private void handleOptions(CheckBox... boxes) {
-        for (CheckBox box : boxes) {
-            if (box.isSelected())
-                System.out.println(box.getText());
-        }
+    private void getChoice(ChoiceBox<String> choiceBox) {
+        System.out.println(choiceBox.getValue());
     }
 
     public static void main(String[] args) {
