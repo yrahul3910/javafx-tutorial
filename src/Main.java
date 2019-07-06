@@ -1,9 +1,10 @@
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -15,25 +16,22 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Title");
 
-        Button button = new Button("OK");
+        TextField userInput = new TextField();
+        userInput.setMaxWidth(200);
 
-        IntegerProperty x = new SimpleIntegerProperty(3);
-        IntegerProperty y = new SimpleIntegerProperty();  // has null
+        Label firstLabel = new Label("Welcome ");
+        Label secondLabel = new Label();
 
-        y.bind(x.multiply(10));  // y is bound to 10 * x whenever x is changed
+        HBox bottomText = new HBox(firstLabel, secondLabel);
+        bottomText.setAlignment(Pos.CENTER);
 
-        System.out.println("x = " + x.get() + ", y = " + y.get());
+        VBox vBox = new VBox(10);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(userInput, bottomText);
 
-        x.set(9);
-        System.out.println("x = " + x.get() + ", y = " + y.get());
+        secondLabel.textProperty().bind(userInput.textProperty());
 
-        x.set(5);
-        System.out.println("x = " + x.get() + ", y = " + y.get());
-
-        StackPane layout = new StackPane();
-        layout.getChildren().addAll(button);
-
-        Scene scene = new Scene(layout, 300, 250);
+        Scene scene = new Scene(vBox, 300, 250);
 
         window.setScene(scene);
         window.show();
