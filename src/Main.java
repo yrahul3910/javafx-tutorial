@@ -1,90 +1,54 @@
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     Stage window;
-    BorderPane layout;
 
     @Override
     public void start(Stage stage) throws Exception {
         window = stage;
         window.setTitle("Title");
 
-        // File menu
-        Menu fileMenu = new Menu("File");
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10));
+        grid.setVgap(8);
+        grid.setHgap(10);
 
-        MenuItem newFile = new MenuItem("New...");
-        newFile.setOnAction(e -> System.out.println("Create a new file"));
-        fileMenu.getItems().add(newFile);
+        Label nameLabel = new Label("Username:");
+        nameLabel.setId("bold-label");
+        GridPane.setConstraints(nameLabel, 0, 0);
 
-        // Or a bunch of them...
-        fileMenu.getItems().addAll(
-                new MenuItem("Open..."),
-                new MenuItem("Save..."),
-                new SeparatorMenuItem(),
-                new MenuItem("Settings..."),
-                new SeparatorMenuItem(),
-                new MenuItem("Exit")
-        );
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Enter your username");
+        GridPane.setConstraints(nameInput, 1, 0);
 
-        // Edit menu
-        Menu editMenu = new Menu("_Edit"); // _ adds a shortcut
+        Label pwdLabel = new Label("Password:");
+        GridPane.setConstraints(pwdLabel, 0, 1);
 
-        MenuItem pasteItem = new MenuItem("Paste");
-        pasteItem.setOnAction(e -> System.out.println("Pasting"));
-        pasteItem.setDisable(true); // disable the item
+        PasswordField pwdInput = new PasswordField();
+        pwdInput.setPromptText("Enter your password");
+        GridPane.setConstraints(pwdInput, 1, 1);
 
-        // sub-menu
-        Menu findMenu = new Menu("Find");
-        MenuItem findMenuItem = new MenuItem("Find...");
-        findMenuItem.setAccelerator(KeyCombination.valueOf("Ctrl+F"));  // adding shortcuts
-        findMenuItem.setOnAction(e -> System.out.println("Finding..."));
+        Button loginButton = new Button("Login");
+        GridPane.setConstraints(loginButton, 1, 2);
 
-        findMenu.getItems().addAll(
-                findMenuItem,
-                new MenuItem("Replace...")
-        );
+        Button signupButton = new Button("Sign Up");
+        signupButton.getStyleClass().add("button-blue");  // no . here!
+        GridPane.setConstraints(signupButton, 1, 3);
 
-        editMenu.getItems().addAll(
-                new MenuItem("Cut"),
-                new MenuItem("Copy"),
-                pasteItem,
-                new SeparatorMenuItem(),
-                findMenu
-        );
+        grid.getChildren().addAll(nameLabel, nameInput, pwdLabel, pwdInput, loginButton, signupButton);
 
-        // Help menu
-        Menu helpMenu = new Menu("_Help");
-        CheckMenuItem showLines = new CheckMenuItem("Show Line Numbers");
-        showLines.setOnAction(e -> {
-            if (showLines.isSelected())
-                System.out.println("Showing line numbers...");
-            else
-                System.out.println("Not showing line numbers...");
-        });
-        helpMenu.getItems().addAll(showLines);
+        Scene scene = new Scene(grid, 300, 250);
+        scene.getStylesheets().add("Viper.css");
 
-        // Difficulty menu
-        Menu difficultyMenu = new Menu("Difficulty");
-        ToggleGroup difficultyToggle = new ToggleGroup();
-        RadioMenuItem easy = new RadioMenuItem("Easy");
-        RadioMenuItem medium = new RadioMenuItem("Medium");
-        RadioMenuItem hard = new RadioMenuItem("Hard");
-        difficultyToggle.getToggles().addAll(easy, medium, hard);
-        difficultyMenu.getItems().addAll(easy, medium, hard);
-
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, editMenu, difficultyMenu, helpMenu);
-
-        layout = new BorderPane();
-        layout.setTop(menuBar);
-
-        Scene scene = new Scene(layout, 400, 300);
         window.setScene(scene);
         window.show();
     }
