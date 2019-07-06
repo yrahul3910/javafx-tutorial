@@ -1,11 +1,7 @@
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -17,37 +13,21 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Title");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        Button button = new Button("OK");
 
-        Label nameLabel = new Label("Username:");
-        nameLabel.setId("bold-label");
-        GridPane.setConstraints(nameLabel, 0, 0);
+        Person bucky = new Person();
+        bucky.firstNameProperty().addListener(
+                (v, oldValue, newValue) -> {
+                    System.out.println(newValue);
+                }
+        );
 
-        TextField nameInput = new TextField();
-        nameInput.setPromptText("Enter your username");
-        GridPane.setConstraints(nameInput, 1, 0);
+        button.setOnAction(e -> bucky.setFirstName("Porky"));
 
-        Label pwdLabel = new Label("Password:");
-        GridPane.setConstraints(pwdLabel, 0, 1);
+        StackPane layout = new StackPane();
+        layout.getChildren().addAll(button);
 
-        PasswordField pwdInput = new PasswordField();
-        pwdInput.setPromptText("Enter your password");
-        GridPane.setConstraints(pwdInput, 1, 1);
-
-        Button loginButton = new Button("Login");
-        GridPane.setConstraints(loginButton, 1, 2);
-
-        Button signupButton = new Button("Sign Up");
-        signupButton.getStyleClass().add("button-blue");  // no . here!
-        GridPane.setConstraints(signupButton, 1, 3);
-
-        grid.getChildren().addAll(nameLabel, nameInput, pwdLabel, pwdInput, loginButton, signupButton);
-
-        Scene scene = new Scene(grid, 300, 250);
-        scene.getStylesheets().add("Viper.css");
+        Scene scene = new Scene(layout, 300, 250);
 
         window.setScene(scene);
         window.show();
