@@ -1,110 +1,92 @@
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     Stage window;
-    TableView<Product> tableView;
-    TextField nameInput, priceInput, qtyInput;
+    BorderPane layout;
 
     @Override
     public void start(Stage stage) throws Exception {
         window = stage;
         window.setTitle("Title");
 
-        TableColumn<Product, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setMinWidth(200);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        // File menu
+        Menu fileMenu = new Menu("File");
 
-        TableColumn<Product, Double> priceColumn = new TableColumn<>("Price");
-        priceColumn.setMinWidth(100);
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        MenuItem newFile = new MenuItem("New...");
+        newFile.setOnAction(e -> System.out.println("Create a new file"));
+        fileMenu.getItems().add(newFile);
 
-        TableColumn<Product, Integer> qtyColumn = new TableColumn<>("Quantity");
-        qtyColumn.setMinWidth(100);
-        qtyColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        // Or a bunch of them...
+        fileMenu.getItems().addAll(
+                new MenuItem("Open..."),
+                new MenuItem("Save..."),
+                new SeparatorMenuItem(),
+                new MenuItem("Settings..."),
+                new SeparatorMenuItem(),
+                new MenuItem("Exit")
+        );
 
-        tableView = new TableView<>();
-        tableView.setItems(getProduct());
-        tableView.getColumns().addAll(nameColumn, priceColumn, qtyColumn);
+        // Edit menu
+        Menu editMenu = new Menu("_Edit"); // _ adds a shortcut
 
-        nameInput = new TextField();
-        nameInput.setPromptText("Product name");
-        nameInput.setMinWidth(100);
+        MenuItem pasteItem = new MenuItem("Paste");
+        pasteItem.setOnAction(e -> System.out.println("Pasting"));
+        pasteItem.setDisable(true); // disable the item
 
-        priceInput = new TextField();
-        priceInput.setPromptText("Unit price");
+        // sub-menu
+        Menu findMenu = new Menu("Find");
+        MenuItem findMenuItem = new MenuItem("Find...");
+        findMenuItem.setAccelerator(KeyCombination.valueOf("Ctrl+F"));  // adding shortcuts
+        findMenuItem.setOnAction(e -> System.out.println("Finding..."));
 
-        qtyInput = new TextField();
-        qtyInput.setPromptText("Quantity");
+        findMenu.getItems().addAll(
+                findMenuItem,
+                new MenuItem("Replace...")
+        );
 
-        Button addButton = new Button("Add");
-        addButton.setOnAction(e -> addButtonClicked());
+        editMenu.getItems().addAll(
+                new MenuItem("Cut"),
+                new MenuItem("Copy"),
+                pasteItem,
+                new SeparatorMenuItem(),
+                findMenu
+        );
 
-        Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction(e -> deleteButtonClicked());
+        // Help menu
+        Menu helpMenu = new Menu("_Help");
+        CheckMenuItem showLines = new CheckMenuItem("Show Line Numbers");
+        showLines.setOnAction(e -> {
+            if (showLines.isSelected())
+                System.out.println("Showing line numbers...");
+            else
+                System.out.println("Not showing line numbers...");
+        });
+        helpMenu.getItems().addAll(showLines);
 
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10));
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(nameInput, priceInput, qtyInput, addButton, deleteButton);
+        // Difficulty menu
+        Menu difficultyMenu = new Menu("Difficulty");
+        ToggleGroup difficultyToggle = new ToggleGroup();
+        RadioMenuItem easy = new RadioMenuItem("Easy");
+        RadioMenuItem medium = new RadioMenuItem("Medium");
+        RadioMenuItem hard = new RadioMenuItem("Hard");
+        difficultyToggle.getToggles().addAll(easy, medium, hard);
+        difficultyMenu.getItems().addAll(easy, medium, hard);
 
-        VBox layout = new VBox();
-        //layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(tableView, hBox);
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(fileMenu, editMenu, difficultyMenu, helpMenu);
 
-        Scene scene = new Scene(layout);
+        layout = new BorderPane();
+        layout.setTop(menuBar);
+
+        Scene scene = new Scene(layout, 400, 300);
         window.setScene(scene);
         window.show();
-    }
-
-    private void deleteButtonClicked() {
-        ObservableList<Product> productSelected, products;
-        products = tableView.getItems();
-        productSelected = tableView.getSelectionModel().getSelectedItems();
-
-        productSelected.forEach(products::remove);
-    }
-
-    private void addButtonClicked() {
-        Product product = new Product();
-        product.setName(nameInput.getText());
-
-        try {
-            product.setPrice(Double.parseDouble(priceInput.getText()));
-            product.setQuantity(Integer.parseInt(qtyInput.getText()));
-        } catch (NumberFormatException e) {
-            // Handle this
-        }
-
-        tableView.getItems().add(product);
-
-        nameInput.clear();
-        priceInput.clear();
-        qtyInput.clear();
-    }
-
-    private ObservableList<Product> getProduct() {
-        // Typically, it would connect to a DB or something
-        ObservableList<Product> products = FXCollections.observableArrayList();
-        products.add(new Product("Laptop", 859.00, 20));
-        products.add(new Product("Ball", 2.49, 198));
-        products.add(new Product("Toilet", 99.00, 74));
-        products.add(new Product("Lover CD", 16.99, 846));
-        products.add(new Product("Corn", 1.49, 12));
-
-        return products;
     }
 
     public static void main(String[] args) {
